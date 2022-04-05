@@ -1,15 +1,20 @@
-import { categoriesRoutes } from '../../../../routes/categories.routes';
-import {ICategories} from '../../interfaces/ICategories'
-import { Category } from '../../model/Category';
+import { inject, injectable } from "tsyringe";
+
+import { ICategoriesRepository } from "@modules/cars/repositories/ICategoriesRepository";
+import { Category } from "@modules/cars/infra/typeorm/entities/Category";
+
+@injectable()
 class ListCategoriesUseCase {
-  constructor(private categoriesRepository: ICategories){}
-  
-  execute() : Category[] {
-    const categories = this.categoriesRepository.list();
+  constructor(
+    @inject("CategoriesRepository")
+    private categoriesRepository: ICategoriesRepository
+  ) {}
+
+  async execute(): Promise<Category[]> {
+    const categories = await this.categoriesRepository.list();
 
     return categories;
-  
   }
 }
 
-export { ListCategoriesUseCase }
+export { ListCategoriesUseCase };
